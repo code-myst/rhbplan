@@ -6,6 +6,7 @@ import CopyButton from "./copy-button";
 import { CONFIG } from "@/lib/config";
 import { GLOSSARY } from "@/lib/planner-data";
 import { buildPlan, type Answers } from "@/lib/planner";
+import { ProjectChecklist, RoadmapSections } from "./roadmap-sections";
 
 export default function PlanView({ answers, onEdit, onReset }: { answers: Answers; onEdit: () => void; onReset: () => void }) {
   const { st, sections, text, who } = useMemo(() => buildPlan(answers), [answers]);

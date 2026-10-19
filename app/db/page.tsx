@@ -20,7 +20,7 @@ export default function DbPage() {
         <p className="mb-2"><Link href="/" className="text-sm font-semibold text-violet-300 hover:underline">← প্ল্যানারে ফিরুন</Link></p>
         <header className="mb-6">
           <h1 className="text-3xl font-extrabold leading-tight tracking-tight sm:text-4xl">ডাটাবেস স্ট্রাকচার জেনারেটর</h1>
-          <p className="mt-2 max-w-2xl text-muted-foreground">ই-কমার্স প্ল্যানারের রিপোর্ট এখানে পেস্ট করুন। রিপোর্টের ফিচার, সাইটের ধরন ও ডাটাবেস দেখে এটি টেবিল বা কালেকশনের পূর্ণ কাঠামো বানিয়ে দেবে।</p>
+          <p className="mt-2 max-w-2xl text-muted-foreground">আপনার roadmap-এর feature list থেকে developer-এর জন্য table, relation, constraint ও starter structure তৈরি করুন। Production-এ দেওয়ার আগে generated blueprint review করুন।</p>
         </header>
         <DbTool starters={loadStarters()} />
       </div>

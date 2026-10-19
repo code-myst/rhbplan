@@ -5,7 +5,8 @@ import { usePathname } from "next/navigation";
 
 const LINKS = [
   { href: "/", label: "প্ল্যানার" },
-  { href: "/db", label: "ডাটাবেস স্ট্রাকচার" },
+  { href: "/db", label: "ডাটাবেস" },
+  { href: "/learn", label: "সহজ ভাষায় শিখুন" },
 ];
 
 export default function Navbar() {
