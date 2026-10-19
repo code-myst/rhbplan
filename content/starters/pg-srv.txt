@@ -1,0 +1,35 @@
+import 'dotenv/config';
+import express from 'express';
+import pg from 'pg';
+
+const app = express();
+app.use(express.json());
+app.use(express.static('public'));
+const db = new pg.Pool({ connectionString: process.env.DATABASE_URL, ssl: { rejectUnauthorized: false } });
+
+// পণ্যের তালিকা
+app.get('/api/products', async (req, res) => {
+  const r = await db.query('SELECT id, name, price, image_urls FROM products WHERE is_active = true ORDER BY created_at DESC');
+  res.json(r.rows);
+});
+
+// নতুন অর্ডার (orders টেবিলে বাড়তি NOT NULL কলাম থাকলে এখানে যোগ করুন)
+app.post('/api/orders', async (req, res) => {
+  const { name, phone, address, items } = req.body; // items: [{ id, qty }]
+  const p = await db.query('SELECT id, name, price FROM products WHERE id = ANY($1)', [items.map(i => i.id)]);
+  let subtotal = 0;
+  const lines = items.map(i => {
+    const x = p.rows.find(r => r.id === i.id);
+    subtotal += Number(x.price) * i.qty;
+    return [x.id, x.name, x.price, i.qty];
+  });
+  const o = await db.query(
+    "INSERT INTO orders (order_no,customer_name,phone,address,subtotal,shipping_fee,discount,total,status,payment_method,payment_status) VALUES ($1,$2,$3,$4,$5,60,0,$6,'pending','cod','unpaid') RETURNING id, order_no",
+    ['ORD-' + Date.now(), name, phone, address, subtotal, subtotal + 60]);
+  for (const l of lines) {
+    await db.query('INSERT INTO order_items (order_id,product_id,name,price,qty) VALUES ($1,$2,$3,$4,$5)', [o.rows[0].id, ...l]);
+  }
+  res.json(o.rows[0]);
+});
+
+app.listen(3000, () => console.log('http://localhost:3000'));

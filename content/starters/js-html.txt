@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="bn">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আমার দোকান</title>
+<h1>আমার দোকান</h1>
+<div id="list"></div>
+<script>
+const WA = '8801XXXXXXXXX'; // আপনার WhatsApp নম্বর
+fetch('data/products.json').then(r => r.json()).then(list => {
+  document.getElementById('list').innerHTML = list.map(p =>
+    `<div><img src="${p.image_urls[0]}" width="160">
+     <h3>${p.name}</h3><p>৳${p.price}</p>
+     <a href="https://wa.me/${WA}?text=${encodeURIComponent(p.name + ' অর্ডার করতে চাই')}">WhatsApp-এ অর্ডার</a></div>`).join('');
+});
+</script>
+</html>

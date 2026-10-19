@@ -1,0 +1,11 @@
+[
+  {
+    "id": 1,
+    "name": "নমুনা পণ্য",
+    "slug": "sample-product",
+    "price": 500,
+    "image_urls": ["https://placehold.co/200"],
+    "category_id": 1,
+    "in_stock": true
+  }
+]

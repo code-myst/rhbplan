@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html lang="bn">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আমার দোকান</title>
+<h1>আমার দোকান</h1>
+<div id="list"></div>
+<button onclick="order()">অর্ডার করুন</button>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-app-compat.js"></script>
+<script src="https://www.gstatic.com/firebasejs/10.12.2/firebase-firestore-compat.js"></script>
+<script>
+// Firebase Console > Project settings থেকে এই মানগুলো বসান
+firebase.initializeApp({ apiKey: 'এখানে', projectId: 'এখানে', appId: 'এখানে' });
+const db = firebase.firestore(), cart = [];
+
+db.collection('products').where('is_active', '==', true).get().then(s => {
+  document.getElementById('list').innerHTML = s.docs.map(d => {
+    const p = d.data();
+    return `<div><img src="${(p.image_urls || [])[0] || 'https://placehold.co/120'}" width="120">
+      <h3>${p.name}</h3><p>৳${p.price}</p>
+      <button onclick="add('${d.id}', ${p.price})">কার্টে যোগ</button></div>`;
+  }).join('');
+});
+function add(id, price) { cart.push({ id, price, qty: 1 }); alert('কার্টে ' + cart.length + 'টি পণ্য'); }
+async function order() {
+  const total = cart.reduce((a, c) => a + c.price * c.qty, 0);
+  await db.collection('orders').add({
+    customer_name: prompt('নাম'), phone: prompt('ফোন'), address: prompt('ঠিকানা'),
+    items: cart, total, status: 'pending',
+    created_at: firebase.firestore.FieldValue.serverTimestamp()
+  });
+  alert('অর্ডার হয়েছে');
+  cart.length = 0;
+}
+</script>
+</html>

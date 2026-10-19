@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="bn">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>আমার দোকান</title>
+<h1>আমার দোকান</h1>
+<div id="list"></div>
+<button onclick="order()">অর্ডার করুন</button>
+<script>
+const cart = [];
+fetch('/api/products').then(r => r.json()).then(list => {
+  document.getElementById('list').innerHTML = list.map(p =>
+    `<div><img src="${(p.image_urls || [])[0] || 'https://placehold.co/120'}" width="120">
+     <h3>${p.name}</h3><p>৳${p.price}</p>
+     <button onclick="add('${p.id}')">কার্টে যোগ</button></div>`).join('');
+});
+function add(id) {
+  const x = cart.find(c => c.id === id);
+  x ? x.qty++ : cart.push({ id, qty: 1 });
+  alert('কার্টে ' + cart.length + 'টি পণ্য');
+}
+async function order() {
+  const r = await fetch('/api/orders', {
+    method: 'POST', headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ name: prompt('নাম'), phone: prompt('ফোন'), address: prompt('ঠিকানা'), items: cart })
+  });
+  const d = await r.json();
+  alert('অর্ডার হয়েছে: ' + d.order_no);
+}
+</script>
+</html>
