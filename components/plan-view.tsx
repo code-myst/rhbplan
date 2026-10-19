@@ -34,6 +34,9 @@ export default function PlanView({ answers, onEdit, onReset }: { answers: Answer
         {GLOSSARY.map(([t, d]) => <details key={t} className="dtl"><summary>{t}</summary><p>{d}</p></details>)}
       </div>
 
+      <RoadmapSections sections={sections} />
+      <ProjectChecklist />
+
       <div className="no-print mt-6 flex flex-wrap gap-3">
         <button className="btn btn-outline btn-lg" onClick={onEdit}>তথ্য বদলান</button>
         <CopyButton text={text} />
